@@ -1,6 +1,13 @@
 import { login as apiLogin } from '@org/api';
 import { User } from '@org/types';
-import { createContext, ReactNode, useContext, useState } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
 
 type AuthContextType = {
   user: User | null;
@@ -17,20 +24,22 @@ type AuthProviderProps = {
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
 
-  const login = async (username: string) => {
+  // 優化：使用 useCallback 避免每次渲染都產生新的參考
+  const login = useCallback(async (username: string) => {
     const loggedInUser = await apiLogin(username);
     setUser(loggedInUser);
-  };
+  }, []);
 
-  const logout = () => {
+  // 優化：使用 useCallback 避免每次渲染都產生新的參考
+  const logout = useCallback(() => {
     setUser(null);
-  };
+  }, []);
 
-  return (
-    <AuthContext.Provider value={{ user, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  // 優化：使用 useMemo 緩存 Context 的 value
+  // 只有當 user, login, logout 改變時，才會產生新的 value 物件
+  const value = useMemo(() => ({ user, login, logout }), [user, login, logout]);
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
