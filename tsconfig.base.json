@@ -16,6 +16,17 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es2022",
-    "customConditions": ["@org/source"]
+    "customConditions": ["@org/source"],
+    "paths": {
+      "@org/page-react-news-app": ["./libs/pages/react-news-app/src"],
+      "@org/api": ["./libs/api/src"],
+      "@org/utils": ["./libs/utils/src"],
+      "@org/types": ["./libs/types/src"],
+      "@org/ui": ["./libs/ui/src"],
+      "@org/layouts": ["./libs/layouts/src"],
+      "@org/auth": ["./libs/auth/src"],
+      "@org/comments": ["./libs/comments/src"],
+      "@org/news": ["./libs/news/src"]
+    }
   }
 }

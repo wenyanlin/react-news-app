@@ -4,34 +4,34 @@
   "files": [],
   "references": [
     {
-      "path": "./apps/api"
+      "path": "./apps/react-news-app"
     },
     {
-      "path": "./apps/shop-e2e"
+      "path": "./libs/types"
     },
     {
-      "path": "./apps/shop"
+      "path": "./libs/ui"
     },
     {
-      "path": "./libs/api/products"
+      "path": "./libs/api"
     },
     {
-      "path": "./libs/shared/models"
+      "path": "./libs/auth"
     },
     {
-      "path": "./libs/shop/data"
+      "path": "./libs/news"
     },
     {
-      "path": "./libs/shop/feature-product-detail"
+      "path": "./libs/comments"
     },
     {
-      "path": "./libs/shop/feature-products"
+      "path": "./libs/pages/react-news-app"
     },
     {
-      "path": "./libs/shop/shared-ui"
+      "path": "./libs/utils"
     },
     {
-      "path": "./libs/shared/test-utils"
+      "path": "./libs/layouts"
     }
   ]
 }
