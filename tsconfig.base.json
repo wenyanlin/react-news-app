@@ -18,15 +18,15 @@
     "target": "es2022",
     "customConditions": ["@org/source"],
     "paths": {
-      "@org/page-react-news-app": ["./libs/pages/react-news-app/src"],
-      "@org/api": ["./libs/api/src"],
-      "@org/utils": ["./libs/utils/src"],
-      "@org/types": ["./libs/types/src"],
-      "@org/ui": ["./libs/ui/src"],
-      "@org/layouts": ["./libs/layouts/src"],
-      "@org/auth": ["./libs/auth/src"],
-      "@org/comments": ["./libs/comments/src"],
-      "@org/news": ["./libs/news/src"]
+      "@org/page-react-news-app": ["./libs/pages/react-news-app/src/index.ts"],
+      "@org/api": ["./libs/api/src/index.ts"],
+      "@org/utils": ["./libs/utils/src/index.ts"],
+      "@org/types": ["./libs/types/src/index.ts"],
+      "@org/ui": ["./libs/ui/src/index.ts"],
+      "@org/layouts": ["./libs/layouts/src/index.ts"],
+      "@org/auth": ["./libs/auth/src/index.ts"],
+      "@org/comments": ["./libs/comments/src/index.ts"],
+      "@org/news": ["./libs/news/src/index.ts"]
     }
   }
 }
