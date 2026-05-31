@@ -1,5 +1,9 @@
-type CommentInputProps = {};
+import { Comment } from '@org/types';
 
-export function CommentInput({}: CommentInputProps) {
+type CommentInputProps = {
+  onAdd: (comment: Comment) => void;
+};
+
+export function CommentInput({ onAdd }: CommentInputProps) {
   return <div>CommentInput</div>;
 }
