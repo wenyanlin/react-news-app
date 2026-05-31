@@ -1,6 +1,7 @@
 import { Comment } from '@org/types';
 import { formatDate } from '@org/utils';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { CommentInput } from './CommentInput';
 
 type CommentItemProps = {
   comment: Comment;
@@ -10,7 +11,7 @@ type CommentItemProps = {
 
 export function CommentItem({ comment, onDelete, onEdit }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [editContent, setEditContent] = useState(comment.content);
+  const editRef = useRef<HTMLTextAreaElement>(null);
   const [action, setAction] = useState<'like' | 'dislike' | null>(null);
 
   const handleLike = () => {
@@ -22,12 +23,13 @@ export function CommentItem({ comment, onDelete, onEdit }: CommentItemProps) {
   };
 
   const handleEditSave = () => {
-    onEdit(comment.id, editContent);
+    const newContent = editRef.current?.value || '';
+    if (!newContent.trim()) return;
+    onEdit(comment.id, newContent);
     setIsEditing(false);
   };
 
   const handleEditCancel = () => {
-    setEditContent(comment.content);
     setIsEditing(false);
   };
 
@@ -39,9 +41,10 @@ export function CommentItem({ comment, onDelete, onEdit }: CommentItemProps) {
     <div className="flex flex-col">
       {isEditing ? (
         <div className="flex flex-col">
-          <textarea
-            value={editContent}
-            onChange={(e) => setEditContent(e.target.value)}
+          <CommentInput
+            inputRef={editRef}
+            defaultValue={comment.content}
+            maxLength={100}
           />
           <div className="flex justify-between">
             <div className="flex">

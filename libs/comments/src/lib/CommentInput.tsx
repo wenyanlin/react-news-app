@@ -1,59 +1,31 @@
-import { Comment } from '@org/types';
-import { useAuth } from '@org/auth';
-import { useState } from 'react';
+import React from 'react';
 
 type CommentInputProps = {
-  onAdd: (comment: Comment) => void;
+  inputRef: React.Ref<HTMLTextAreaElement>;
+  disabled?: boolean;
+  placeholder?: string;
   maxLength?: number;
+  defaultValue?: string;
 };
 
-export function CommentInput({ onAdd, maxLength = 100 }: CommentInputProps) {
-  const { user, logout } = useAuth();
-  const [draft, setDraft] = useState<string>('');
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!draft.trim()) return;
-    
-    if (!user) {
-      logout();
-      return;
-    }
-
-    const newComment: Comment = {
-      id: crypto.randomUUID(),
-      content: draft,
-      createdAt: new Date().toISOString(),
-      likeCount: 0,
-      dislikeCount: 0,
-      userId: user.name,
-      articleId: '',
-    };
-
-    onAdd(newComment);
-    setDraft('');
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if (e.target.value.length <= maxLength) {
-      setDraft(e.target.value);
-    }
-  };
-
+/**
+ * 純 UI 元件
+ */
+export function CommentInput({
+  inputRef,
+  disabled,
+  placeholder,
+  maxLength,
+  defaultValue,
+}: CommentInputProps) {
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col">
-      <textarea
-        value={draft}
-        onChange={handleChange}
-        placeholder={user ? '請輸入留言...' : '請先登入才能留言'}
-        disabled={!user}
-      />
-      <div>
-        <button type="submit" disabled={!draft.trim() || !user}>
-          送出留言
-        </button>
-      </div>
-    </form>
+    <textarea
+      ref={inputRef}
+      placeholder={placeholder}
+      disabled={disabled}
+      maxLength={maxLength}
+      defaultValue={defaultValue}
+      className="w-full"
+    />
   );
 }

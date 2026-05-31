@@ -1,7 +1,7 @@
 import { fetchComments } from '@org/api';
 import { Comment } from '@org/types';
 import { useEffect, useState } from 'react';
-import { CommentInput } from './CommentInput';
+import { CommentForm } from './CommentForm';
 import { CommentList } from './CommentList';
 
 type CommentSectionProps = {
@@ -55,13 +55,17 @@ export function CommentSection({ articleId }: CommentSectionProps) {
 
   const handleLike = (commentId: string) => {
     setComments((prev: Comment[]) =>
-      prev.map((c) => (c.id === commentId ? { ...c, likeCount: c.likeCount + 1 } : c))
+      prev.map((c) =>
+        c.id === commentId ? { ...c, likeCount: c.likeCount + 1 } : c,
+      ),
     );
   };
 
   const handleDislike = (commentId: string) => {
     setComments((prev: Comment[]) =>
-      prev.map((c) => (c.id === commentId ? { ...c, dislikeCount: c.dislikeCount + 1 } : c))
+      prev.map((c) =>
+        c.id === commentId ? { ...c, dislikeCount: c.dislikeCount + 1 } : c,
+      ),
     );
   };
 
@@ -70,13 +74,13 @@ export function CommentSection({ articleId }: CommentSectionProps) {
   return (
     <div>
       <h1>Comment Section</h1>
-      <CommentInput onAdd={add} />
-      <CommentList 
-        comments={comments} 
-        onDelete={remove} 
-        onEdit={edit} 
-        onLike={handleLike} 
-        onDislike={handleDislike} 
+      <CommentForm onAdd={add} />
+      <CommentList
+        comments={comments}
+        onDelete={remove}
+        onEdit={edit}
+        onLike={handleLike}
+        onDislike={handleDislike}
       />
     </div>
   );
