@@ -11,11 +11,11 @@ export const mockUsers: User[] = [
 
 // --- Categories (至少五筆) ---
 export const mockCategories: Category[] = [
-  { id: 'f6a7b8c9-0001-4111-8111-000000000001', name: '科技' },
-  { id: 'a7b8c9d0-0002-4222-8222-000000000002', name: '體育' },
-  { id: 'b8c9d0e1-0003-4333-8333-000000000003', name: '商業' },
-  { id: 'c9d0e1f2-0004-4444-8444-000000000004', name: '健康' },
-  { id: 'd0e1f2a3-0005-4555-8555-000000000005', name: '娛樂' },
+  { id: 'technology', name: '科技' },
+  { id: 'sports', name: '體育' },
+  { id: 'business', name: '商業' },
+  { id: 'health', name: '健康' },
+  { id: 'entertainment', name: '娛樂' },
 ];
 
 // --- Articles (每個分類 1~5 篇，共 6 篇) ---
@@ -28,7 +28,7 @@ export const mockArticles: Article[] = [
     imageUrl: 'https://picsum.photos/seed/react/800/400',
     publishedAt: '2026-05-30T10:00:00Z',
     commentCount: 2, // 對應下方 mockComments 兩筆
-    categoryId: 'f6a7b8c9-0001-4111-8111-000000000001', // 科技
+    categoryId: 'technology', // 科技
     authorId: 'a1b2c3d4-1111-4aaa-8bbb-1234567890ab', // Alice
   },
   {
@@ -39,7 +39,7 @@ export const mockArticles: Article[] = [
     imageUrl: 'https://picsum.photos/seed/nx/800/400',
     publishedAt: '2026-05-31T09:30:00Z',
     commentCount: 1, // 對應下方 mockComments 一筆
-    categoryId: 'f6a7b8c9-0001-4111-8111-000000000001', // 科技
+    categoryId: 'technology', // 科技
     authorId: 'b2c3d4e5-2222-4bbb-9ccc-2345678901bc', // Bob
   },
   {
@@ -50,7 +50,7 @@ export const mockArticles: Article[] = [
     imageUrl: 'https://picsum.photos/seed/sports/800/400',
     publishedAt: '2026-05-29T21:15:00Z',
     commentCount: 1,
-    categoryId: 'a7b8c9d0-0002-4222-8222-000000000002', // 體育
+    categoryId: 'sports', // 體育
     authorId: 'c3d4e5f6-3333-4ccc-addd-3456789012cd', // Charlie
   },
   {
@@ -61,7 +61,7 @@ export const mockArticles: Article[] = [
     imageUrl: 'https://picsum.photos/seed/business/800/400',
     publishedAt: '2026-05-31T14:00:00Z',
     commentCount: 0,
-    categoryId: 'b8c9d0e1-0003-4333-8333-000000000003', // 商業
+    categoryId: 'business', // 商業
     authorId: 'd4e5f6a7-4444-4ddd-beee-4567890123de', // David
   },
   {
@@ -72,7 +72,7 @@ export const mockArticles: Article[] = [
     imageUrl: 'https://picsum.photos/seed/coffee/800/400',
     publishedAt: '2026-05-28T08:45:00Z',
     commentCount: 1,
-    categoryId: 'c9d0e1f2-0004-4444-8444-000000000004', // 健康
+    categoryId: 'health', // 健康
     authorId: 'e5f6a7b8-5555-4eee-cfff-5678901234ef', // Eve
   },
   {
@@ -83,7 +83,7 @@ export const mockArticles: Article[] = [
     imageUrl: 'https://picsum.photos/seed/movie/800/400',
     publishedAt: '2026-05-31T20:00:00Z',
     commentCount: 0,
-    categoryId: 'd0e1f2a3-0005-4555-8555-000000000005', // 娛樂
+    categoryId: 'entertainment', // 娛樂
     authorId: 'a1b2c3d4-1111-4aaa-8bbb-1234567890ab', // Alice
   },
 ];
