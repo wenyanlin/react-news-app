@@ -1,19 +1,15 @@
 import { fetchArticle } from '@org/api';
 import { CommentSection } from '@org/comments';
 import { ArticleDetail } from '@org/news';
-import { Article, User } from '@org/types';
+import { Article } from '@org/types';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-
-type ArticlePageProps = {
-  user: User | null;
-};
 
 /**
  * 文章詳情頁
  * 主要驗證 articleId 是否存在，為此取得有效 articleDetail 並往下傳
  */
-export function ArticlePage({ user }: ArticlePageProps) {
+export function ArticlePage() {
   const { articleId } = useParams();
   const [articleDetail, setArticleDetail] = useState<Article | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -48,27 +44,22 @@ export function ArticlePage({ user }: ArticlePageProps) {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
-  return (
-    articleDetail && (
-      <ArticlePageContent articleDetail={articleDetail} user={user} />
-    )
-  );
+  return articleDetail && <ArticlePageContent articleDetail={articleDetail} />;
 }
 
 type ArticlePageContent = {
   articleDetail: Article;
-  user?: User | null;
 };
 
 /**
  * 主要將資料往下傳遞
  */
-function ArticlePageContent({ articleDetail, user }: ArticlePageContent) {
+function ArticlePageContent({ articleDetail }: ArticlePageContent) {
   return (
     <div>
       <h1>Article Page</h1>
       <ArticleDetail articleDetail={articleDetail} />
-      <CommentSection articleId={articleDetail.id} user={user} />
+      <CommentSection articleId={articleDetail.id} />
     </div>
   );
 }

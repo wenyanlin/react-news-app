@@ -35,6 +35,9 @@
     },
     {
       "path": "../../libs/utils/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/auth/tsconfig.lib.json"
     }
   ]
 }

@@ -1,13 +1,9 @@
-import { login } from '@org/api';
-import { User } from '@org/types';
+import { useAuth } from '@org/auth';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export type LoginPageProps = {
-  onLogin: (user: User) => void;
-};
-
-export function LoginPage({ onLogin }: LoginPageProps) {
+export function LoginPage() {
+  const { login } = useAuth();
   const [username, setUsername] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -19,8 +15,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
     setError('');
     setIsLoading(true);
     try {
-      const user = await login(username);
-      onLogin(user);
+      await login(username);
       navigate('/');
     } catch (error) {
       if (error instanceof Error) {

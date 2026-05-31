@@ -1,17 +1,22 @@
-import { User } from '@org/types';
+import { useAuth } from '@org/auth';
 
-type HeaderProps = {
-  user?: User | null;
-};
+export function Header() {
+  const { user, logout } = useAuth();
 
-export function Header({ user }: HeaderProps) {
   return (
-    <header>
+    <header className="flex justify-between p-4">
       <div>
         <a href="/">Logo</a>
       </div>
       <div>
-        {user ? <span>Welcome, {user.name}</span> : <a href="/login">Login</a>}
+        {user ? (
+          <div className="flex gap-4">
+            <span>Welcome, {user.name}</span>
+            <button onClick={logout}>Logout</button>
+          </div>
+        ) : (
+          <a href="/login">Login</a>
+        )}
       </div>
     </header>
   );

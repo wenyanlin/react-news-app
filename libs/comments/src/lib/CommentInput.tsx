@@ -1,18 +1,25 @@
-import { Comment, User } from '@org/types';
+import { Comment } from '@org/types';
+import { useAuth } from '@org/auth';
 import { useState } from 'react';
 
 type CommentInputProps = {
   onAdd: (comment: Comment) => void;
-  user?: User | null;
   maxLength?: number;
 };
 
-export function CommentInput({ onAdd, user, maxLength = 100 }: CommentInputProps) {
+export function CommentInput({ onAdd, maxLength = 100 }: CommentInputProps) {
+  const { user, logout } = useAuth();
   const [draft, setDraft] = useState<string>('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!draft.trim() || !user) return;
+    
+    if (!draft.trim()) return;
+    
+    if (!user) {
+      logout();
+      return;
+    }
 
     const newComment: Comment = {
       id: crypto.randomUUID(),
