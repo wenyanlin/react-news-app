@@ -1,26 +1,29 @@
 import { Comment } from '@org/types';
-import { formatDate } from '@org/utils';
+import { CommentItem } from './CommentItem';
 
 type CommentListProps = {
-  comments?: Comment[];
+  comments: Comment[];
+  onDelete: (id: string) => void;
+  onEdit: (id: string, newContent: string) => void;
+  onLike: (id: string) => void;
+  onDislike: (id: string) => void;
 };
 
-export function CommentList({ comments = [] }: CommentListProps) {
+export function CommentList({
+  comments = [],
+  onDelete,
+  onEdit,
+}: CommentListProps) {
   if (comments.length === 0) return <div>目前沒有評論</div>;
   return (
     <div className="flex flex-col">
       {comments.map((comment) => (
-        <div key={comment.id} className="flex flex-col">
-          <div>{comment.content}</div>
-          <div className="flex justify-between">
-            <div className="flex">
-              <div>{comment.userId}</div>
-              <div>{comment.likeCount}</div>
-              <div>{comment.dislikeCount}</div>
-            </div>
-            <div>{formatDate(comment.createdAt)}</div>
-          </div>
-        </div>
+        <CommentItem
+          key={comment.id}
+          comment={comment}
+          onDelete={onDelete}
+          onEdit={onEdit}
+        />
       ))}
     </div>
   );

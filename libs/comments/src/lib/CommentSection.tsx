@@ -43,13 +43,41 @@ export function CommentSection({ articleId }: CommentSectionProps) {
     setComments((prev: Comment[]) => [comment, ...prev]);
   };
 
+  const remove = (commentId: string) => {
+    setComments((prev: Comment[]) => prev.filter((c) => c.id !== commentId));
+  };
+
+  const edit = (commentId: string, newContent: string) => {
+    setComments((prev: Comment[]) =>
+      prev.map((c) => (c.id === commentId ? { ...c, content: newContent } : c)),
+    );
+  };
+
+  const handleLike = (commentId: string) => {
+    setComments((prev: Comment[]) =>
+      prev.map((c) => (c.id === commentId ? { ...c, likeCount: c.likeCount + 1 } : c))
+    );
+  };
+
+  const handleDislike = (commentId: string) => {
+    setComments((prev: Comment[]) =>
+      prev.map((c) => (c.id === commentId ? { ...c, dislikeCount: c.dislikeCount + 1 } : c))
+    );
+  };
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
   return (
     <div>
       <h1>Comment Section</h1>
       <CommentInput onAdd={add} />
-      <CommentList comments={comments} />
+      <CommentList 
+        comments={comments} 
+        onDelete={remove} 
+        onEdit={edit} 
+        onLike={handleLike} 
+        onDislike={handleDislike} 
+      />
     </div>
   );
 }
