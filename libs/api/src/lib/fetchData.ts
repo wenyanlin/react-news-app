@@ -1,8 +1,20 @@
-import { Article, Category, Comment } from '@org/types';
-import { mockArticles, mockCategories, mockComments } from './mock';
+import { Article, Category, Comment, User } from '@org/types';
+import { mockArticles, mockCategories, mockComments, mockUsers } from './mock';
 
 // 模擬延遲的工具函式 (預設延遲 500 毫秒)
 const delay = (ms = 500) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * 登入 (以使用者名稱比對)
+ */
+export async function login(username: string): Promise<User> {
+  await delay();
+  const user = mockUsers.find((u) => u.name === username);
+  if (!user) {
+    throw new Error(`401 Unauthorized: 找不到名稱為 ${username} 的使用者`);
+  }
+  return user;
+}
 
 /**
  * 獲取所有分類清單
