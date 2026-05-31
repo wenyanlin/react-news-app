@@ -1,6 +1,7 @@
 import { fetchArticlesByCategoryId } from '@org/api';
 import { Article } from '@org/types';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 type ArticleListProps = {
   categoryId: string;
@@ -41,11 +42,12 @@ export function ArticleList({ categoryId }: ArticleListProps) {
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
+  if (articleList.length === 0) return <div>目前該分類沒有新聞唷！</div>;
 
   return (
     <div className="flex flex-col">
       {articleList.map((article) => (
-        <div key={article.id} className="flex">
+        <Link to={`/news/${article.id}`} key={article.id} className="flex">
           <div>
             <img src={article.imageUrl} alt={article.title} />
           </div>
@@ -55,7 +57,7 @@ export function ArticleList({ categoryId }: ArticleListProps) {
             <div>{article.publishedAt}</div>
             <div>{article.commentCount}</div>
           </div>
-        </div>
+        </Link>
       ))}
     </div>
   );

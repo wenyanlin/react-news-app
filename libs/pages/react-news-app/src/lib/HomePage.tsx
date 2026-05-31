@@ -4,6 +4,10 @@ import { Category } from '@org/types';
 import { useEffect, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 
+/**
+ * 首頁
+ * 主要驗證路由參數 categoryId 是否存在，為此先取得 categories 並往下傳
+ */
 export function HomePage() {
   const { categoryId } = useParams();
   const [categories, setCategories] = useState<Category[]>([]);
@@ -43,7 +47,18 @@ export function HomePage() {
   ) {
     return <Navigate to={`/${categories[0].id}`} replace />;
   }
+  return <HomePageContent categoryId={categoryId} categories={categories} />;
+}
 
+type HomePageContentProps = {
+  categoryId: string;
+  categories: Category[];
+};
+
+/**
+ * 主要將資料往下傳遞
+ */
+function HomePageContent({ categoryId, categories }: HomePageContentProps) {
   return (
     <div>
       <h1>Home Page</h1>

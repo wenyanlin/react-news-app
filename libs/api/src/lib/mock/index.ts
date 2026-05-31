@@ -64,17 +64,7 @@ export const mockArticles: Article[] = [
     categoryId: 'business', // 商業
     authorId: 'd4e5f6a7-4444-4ddd-beee-4567890123de', // David
   },
-  {
-    id: '55555555-eeee-4eee-8eee-555555555555',
-    title: '每天一杯黑咖啡的好處',
-    summary: '最新研究顯示，適量飲用黑咖啡有助於提升代謝。',
-    content: '營養學家建議，早晨飲用一杯無糖黑咖啡能帶來諸多健康益處...',
-    imageUrl: 'https://picsum.photos/seed/coffee/800/400',
-    publishedAt: '2026-05-28T08:45:00Z',
-    commentCount: 1,
-    categoryId: 'health', // 健康
-    authorId: 'e5f6a7b8-5555-4eee-cfff-5678901234ef', // Eve
-  },
+
   {
     id: '66666666-ffff-4fff-8fff-666666666666',
     title: '年度電影頒獎典禮得獎名單',
@@ -125,14 +115,5 @@ export const mockComments: Comment[] = [
     dislikeCount: 2,
     userId: 'e5f6a7b8-5555-4eee-cfff-5678901234ef', // Eve
     articleId: '33333333-cccc-4ccc-8ccc-333333333333', // 體育文章
-  },
-  {
-    id: '99999999-5555-4555-8555-999999999995',
-    content: '雖然咖啡好處多，但胃不好的人還是要注意攝取量。',
-    createdAt: '2026-05-28T09:20:00Z',
-    likeCount: 30,
-    dislikeCount: 0,
-    userId: 'a1b2c3d4-1111-4aaa-8bbb-1234567890ab', // Alice
-    articleId: '55555555-eeee-4eee-8eee-555555555555', // 健康文章
   },
 ];
