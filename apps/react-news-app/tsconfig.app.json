@@ -38,6 +38,9 @@
     },
     {
       "path": "../../libs/utils/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/layouts/tsconfig.lib.json"
     }
   ]
 }

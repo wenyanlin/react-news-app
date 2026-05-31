@@ -1,17 +1,18 @@
-import { Comment } from '@org/types';
+import { Comment, User } from '@org/types';
 import { useState } from 'react';
 
 type CommentInputProps = {
   onAdd: (comment: Comment) => void;
+  user?: User | null;
   maxLength?: number;
 };
 
-export function CommentInput({ onAdd, maxLength = 100 }: CommentInputProps) {
+export function CommentInput({ onAdd, user, maxLength = 100 }: CommentInputProps) {
   const [draft, setDraft] = useState<string>('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!draft.trim()) return;
+    if (!draft.trim() || !user) return;
 
     const newComment: Comment = {
       id: crypto.randomUUID(),
@@ -19,7 +20,7 @@ export function CommentInput({ onAdd, maxLength = 100 }: CommentInputProps) {
       createdAt: new Date().toISOString(),
       likeCount: 0,
       dislikeCount: 0,
-      userId: '',
+      userId: user.name,
       articleId: '',
     };
 
@@ -38,10 +39,11 @@ export function CommentInput({ onAdd, maxLength = 100 }: CommentInputProps) {
       <textarea
         value={draft}
         onChange={handleChange}
-        placeholder="請輸入留言..."
+        placeholder={user ? '請輸入留言...' : '請先登入才能留言'}
+        disabled={!user}
       />
       <div>
-        <button type="submit" disabled={!draft.trim()}>
+        <button type="submit" disabled={!draft.trim() || !user}>
           送出留言
         </button>
       </div>

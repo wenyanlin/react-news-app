@@ -1,14 +1,15 @@
 import { fetchComments } from '@org/api';
-import { Comment } from '@org/types';
+import { Comment, User } from '@org/types';
 import { useEffect, useState } from 'react';
 import { CommentInput } from './CommentInput';
 import { CommentList } from './CommentList';
 
 type CommentSectionProps = {
   articleId: string;
+  user?: User | null;
 };
 
-export function CommentSection({ articleId }: CommentSectionProps) {
+export function CommentSection({ articleId, user }: CommentSectionProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -70,7 +71,7 @@ export function CommentSection({ articleId }: CommentSectionProps) {
   return (
     <div>
       <h1>Comment Section</h1>
-      <CommentInput onAdd={add} />
+      <CommentInput onAdd={add} user={user} />
       <CommentList 
         comments={comments} 
         onDelete={remove} 

@@ -2,7 +2,7 @@ import { Comment } from '@org/types';
 import { CommentItem } from './CommentItem';
 
 type CommentListProps = {
-  comments: Comment[];
+  comments?: Comment[];
   onDelete: (id: string) => void;
   onEdit: (id: string, newContent: string) => void;
   onLike: (id: string) => void;
