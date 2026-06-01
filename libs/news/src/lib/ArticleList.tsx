@@ -1,3 +1,8 @@
+/**
+ * @file ArticleList.tsx
+ * @description 新聞文章列表組件，依據當前選擇 the categoryId 從 API 載入文章數據，並渲染成美觀的新聞卡片。
+ */
+
 import { fetchArticlesByCategoryId } from '@org/api';
 import { Article } from '@org/types';
 import { formatDate } from '@org/utils';
@@ -5,11 +10,14 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 type ArticleListProps = {
+  /** 欲載入文章的分類 ID */
   categoryId: string;
 };
 
 /**
- * 顯示文章列表
+ * ArticleList 新聞清單組件
+ * @description 提供骨架屏加載狀態、空狀態處理及錯誤捕獲。
+ *              成功加載後，渲染一系列的響應式連結卡片，點擊可透過 SPA 路由進入詳細閱讀頁面。
  */
 export function ArticleList({ categoryId }: ArticleListProps) {
   const [articleList, setArticleList] = useState<Article[]>([]);
@@ -103,3 +111,22 @@ export function ArticleList({ categoryId }: ArticleListProps) {
     </div>
   );
 }
+
+/**
+ * 改善建議
+ *
+ * 1. [✓] 骨架屏載入狀態視覺回饋:
+ *    - 實現：利用了 Tailwind `animate-pulse` 動畫，在加載新聞期間替代死板的 Loading 文字，優化了介面預期感。
+ *
+ * 2. 渲染邊界與組件拆分 (邊界渲染原則):
+ *    - 問題：`ArticleList` 直接在 `map` 環圈中渲染了非常繁雜的文章卡片 DOM 結構。只要 `ArticleList` 狀態或父級更新，整張列表內的所有卡片都會被迫重建。
+ *    - 改善：將卡片 DOM 抽離為一個獨立的、具備單一職責的 `<ArticleCard article={article} />` 組件，並可考慮使用 `React.memo` 進行封裝，從而為每篇新聞建立獨立的渲染邊界，防止無效渲染。
+ *
+ * 3. 數據拉取與列表呈現高度耦合 (職責單一原則 - SRP):
+ *    - 問題：`ArticleList` 同時兼顧了「發送 API 拉取對應 categoryId 的文章數據」與「新聞列表 UI 呈現」雙重職責，不利於清單在其他非 API 情境下的複用。
+ *    - 改善：將抓取資料邏輯抽離成自訂 Hook `useCategoryArticles(categoryId)`，`ArticleList` 組件只透過 props 接收 `articles` 陣列，使其退化成一個複用性極高的純展示列表組件。
+ *
+ * 4. 缺乏大數據分頁支撐 (複用性高原則):
+ *    - 問題：目前的 API 會一次性加載該分類下的所有文章，無法支援真實大流量新聞網站的滾動加載需求。
+ *    - 改善：重構列表容器以支持分頁（Pagination）或利用 `IntersectionObserver` 實作無限滾動加載（Infinite Scroll），甚至引進 Virtual List（虛擬列表）技術只渲染可視區域的 DOM，大幅度提高海量數據下的列表執行效能。
+ */

@@ -1,3 +1,8 @@
+/**
+ * @file HomePage.tsx
+ * @description 應用程式首頁，負責載入新聞分類目錄、驗證當前網址的 categoryId 參數是否合法，並進行預設分類的跳轉重導向。
+ */
+
 import { fetchCategories } from '@org/api';
 import { ArticleList, CategoryList } from '@org/news';
 import { Category } from '@org/types';
@@ -5,8 +10,9 @@ import { useEffect, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 
 /**
- * 首頁
- * 主要驗證路由參數 categoryId 是否存在，為此先取得 categories 並往下傳
+ * HomePage 元件
+ * @description 應用程式的主首頁控制器。在首度加載時向 API 取得分類列表，
+ *              若網址列無帶入任何 `categoryId` 或帶入的參數不合法，則會自動重導向至第一個有效分類。
  */
 export function HomePage() {
   const { categoryId } = useParams();
@@ -56,7 +62,12 @@ type HomePageContentProps = {
 };
 
 /**
- * 主要將資料往下傳遞
+ * HomePageContent 元件
+ * @description 當分類載入與驗證成功後，負責渲染首頁的主要區塊，
+ *              包括頂層的標題描述、CategoryList 分類切換器以及 ArticleList 文章卡片列表。
+ * @param {HomePageContentProps} props - 傳入的屬性
+ * @param {string} props.categoryId - 目前選中的分類 ID
+ * @param {Category[]} props.categories - 所有的分類列表數據
  */
 function HomePageContent({ categoryId, categories }: HomePageContentProps) {
   return (
@@ -74,3 +85,14 @@ function HomePageContent({ categoryId, categories }: HomePageContentProps) {
     </div>
   );
 }
+
+/**
+ *
+ * 獲取分類數據邏輯與頁面渲染混雜 (單一職責原則 - SRP):
+ *  - 問題：`HomePage` 自身承擔了「透過異步請求拉取所有新聞分類資料（`fetchCategories`）」的邏輯。
+ *  - 改善：將抓取分類的異步加載行為抽離成獨立的 `useCategories()` Hook，使首頁組件專注於路由分發與參數校驗。
+ *
+ * 異步載入阻塞頁面框架渲染 (邊界渲染原則):
+ *  - 問題：在獲取 categories 期間，頁面整頁回傳 `Loading...`。這使得整個頁面的導航架構在加載時全部丟失。
+ *  - 改善：使用 React Router 的 `loader` 提早獲取分類，或者在 `HomePage` 外層引入 React.Suspense 邊界。使應用的頁首（Header）及首頁主體結構能瞬間渲染，僅有分類切換器本身進行局部 Suspense 載入。
+ */

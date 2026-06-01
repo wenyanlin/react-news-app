@@ -1,14 +1,28 @@
+/**
+ * @file CommentItem.tsx
+ * @description 單一留言項目卡片組件，包含使用者首字頭像、發佈時間、留言本文、支持/反對按鈕，並整合行內直接編輯與刪除留言的動態表單邏輯。
+ */
+
 import { Comment } from '@org/types';
 import { formatDate } from '@org/utils';
 import { useRef, useState } from 'react';
 import { CommentInput } from './CommentInput';
 
 type CommentItemProps = {
+  /** 留言數據物件 */
   comment: Comment;
+  /** 刪除留言的回呼函式 */
   onDelete: (id: string) => void;
+  /** 編輯儲存留言的回呼函式 */
   onEdit: (id: string, newContent: string) => void;
 };
 
+/**
+ * CommentItem 留言單元組件
+ * @description 實現單條留言的多功能操作。
+ *              點擊「編輯」會切換為 CommentInput 輸入框進行就地修改並支持「儲存」與「取消」；
+ *              點擊「👍 讚 / 👎 噓」能給予即時的按讚/噓數視覺增量反饋。
+ */
 export function CommentItem({ comment, onDelete, onEdit }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const editRef = useRef<HTMLTextAreaElement>(null);
@@ -125,3 +139,21 @@ export function CommentItem({ comment, onDelete, onEdit }: CommentItemProps) {
     </div>
   );
 }
+
+/**
+ * 改善建議
+ *
+ * 1. [✓] 就地（In-place）編輯切換邏輯 (單一職責原則 - SRP):
+ *    - 實現：封裝了留言本文與編輯模式表單的顯示狀態切換（`isEditing`），將單一留言的互動操作隔離在卡片元件內部。
+ *
+ * 2. [✓] 無障礙 Emoji 規範標記:
+ *    - 實現：`👍` 與 `👎` 按鈕內的 Emoji 均使用 `<span>` 包裝，設定了正確的 `role="img"` 及 `aria-label` 說明，符合 JSX A11y 指南。
+ *
+ * 3. 業務操作狀態與視圖高度重合 (單一職責原則 - SRP):
+ *    - 問題：`CommentItem` 同時承擔了「本地按讚/噓互動狀態維持（`action`）」與「編輯儲存驗證邏輯（`handleEditSave`）」。
+ *    - 改善：將所有的 Mutation 業務邏輯（例如讚/噓、確認編輯）提純至最上層的 Controller hook 或調用端，`CommentItem` 僅需發送 `onLike`、`onDislike` 與 `onSave` 等回呼，成為一個純展示與互動回傳元件。
+ *
+ * 4. 內建編輯表單阻礙組件複用與邊界渲染 (邊界渲染原則):
+ *    - 問題：當前編輯留言的表單 `isEditing ? (...) : (...)` 完全內嵌在組件中。在編輯輸入框中敲擊文字時，整個 `CommentItem` 的頭像、名稱、留言時間等靜態內容都會被迫重新繪製。
+ *    - 改善：將編輯模式下的輸入區塊與取消/儲存按鈕，徹底拆分成一個獨立的子組件 `<CommentEditForm defaultValue={comment.content} onSave={handleEditSave} onCancel={handleEditCancel} />`。這能將鍵盤輸入帶來的重繪封鎖在該子元件的渲染邊界內，同時極大化提高了留言內容卡片的外觀複用度。
+ */

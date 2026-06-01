@@ -1,11 +1,22 @@
+/**
+ * @file CommentSection.tsx
+ * @description 新聞評論板塊主要控制器組件，整合留言新增、刪除、編輯與按讚按噓等交互行為。
+ */
+
 import { CommentForm } from './CommentForm';
 import { CommentList } from './CommentList';
 import { useComments } from './useComments';
 
 type CommentSectionProps = {
+  /** 文章 ID */
   articleId: string;
 };
 
+/**
+ * CommentSection 評論板塊元件
+ * @description 根據傳入的 `articleId` 透過自訂 Hook `useComments` 管理評論資料狀態。
+ *              元件負責處理加載中、錯誤狀態，並在載入成功後整合渲染 CommentForm 及 CommentList。
+ */
 export function CommentSection({ articleId }: CommentSectionProps) {
   const {
     comments,

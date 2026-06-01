@@ -1,7 +1,17 @@
+/**
+ * @file LoginPage.tsx
+ * @description 登入頁面組件，提供使用者名稱輸入介面，並呼叫全域的登入方法。
+ */
+
 import { useAuth } from '@org/auth';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+/**
+ * LoginPage 登入組件
+ * @description 提供一個簡約的白卡片表單，使用者輸入任意的名稱即可直接進行登入。
+ *              登入成功後，將會自動重導向回首頁（`/`）。
+ */
 export function LoginPage() {
   const { login } = useAuth();
   const [username, setUsername] = useState('');
@@ -67,3 +77,13 @@ export function LoginPage() {
     </div>
   );
 }
+
+/**
+ * 登入業務操作與頁面元件耦合 (單一職責原則 - SRP):
+ *  - 問題：`LoginPage` 頁面直接編寫並維護了登入表單的 DOM 結構、防呆狀態與提交處理。
+ *  - 改善：將登入表單內容拆分成一個高複用性的單一職責組件 `<LoginForm onSubmit={handleLogin} />`。`LoginPage` 作為頁面層，僅處理登入後的重導向路由與全域錯誤氣泡提示，提升表單元件在「彈窗登入」等非頁面場景下的複用潛力。
+ *
+ * 鍵盤輸入導致頁面重繪範圍過大 (邊界渲染原則):
+ *  - 問題：目前採用受控變數 `username` 來抓取輸入，使用者在輸入框中每鍵入一個字母，都會觸發 `useState` 狀態變更，進而迫使整個 `LoginPage`（含外部卡片包裝與標題文字）全部重新繪製。
+ *  - 改善：將輸入框及其 state 封閉在拆分出來的 `<LoginForm />` 子組件內部，或使用 `useRef` 非受控元件抓取。確保使用者打字時，重繪界線被限縮在最小範圍，維持首頁與全站外框的渲染穩定。
+ */

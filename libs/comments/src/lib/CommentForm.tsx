@@ -1,15 +1,24 @@
+/**
+ * @file CommentForm.tsx
+ * @description 新增評論表單組件，控制留言輸入狀態與防呆限制，並根據當前會員登入狀態動態啟用/停用。
+ */
+
 import { useAuth } from '@org/auth';
 import { Comment } from '@org/types';
 import { useEffect, useRef } from 'react';
 import { CommentInput } from './CommentInput';
 
 type CommentFormProps = {
+  /** 新增留言的回呼函式 */
   onAdd: (comment: Comment) => void;
+  /** 輸入字數限制上限，預設為 100 */
   maxLength?: number;
 };
 
 /**
- * 處理邏輯與狀態
+ * CommentForm 評論輸入表單
+ * @description 當使用者未登入時，表單呈唯讀狀態並提示使用者先登入；
+ *              登入成功後允許輸入內容，並在提交時防呆空白內容與超過字數上限。
  */
 export function CommentForm({ onAdd, maxLength = 100 }: CommentFormProps) {
   const { user, logout } = useAuth();
@@ -85,3 +94,14 @@ export function CommentForm({ onAdd, maxLength = 100 }: CommentFormProps) {
     </form>
   );
 }
+
+/**
+ *
+ * 留言模型實例化職責混雜 (單一職責原則 - SRP):
+ *  - 問題：`CommentForm` 內部直接構造了 `Comment` 資料物件（包含隨機生成 ID、發佈時間、將 userId 綁定為 `user.name` ）。這不屬於表單收集輸入的職責。
+ *  - 改善：將建構 Comment 資料實體物件的責任轉交給父層 Controller hook（`useComments` 的 `addComment` 內部）或獨立的資料層。表單僅需回傳 `draft` 文字字串，讓 UI 元件回歸純淨的資料收集職責。
+ *
+ * 元件可複用性過低 (複用性高原則):
+ *  - 問題：提交按鈕的提示語文字與判斷邏輯全部在元件內被硬編碼。
+ *  - 改善：將留言輸入表單的核心結構抽象化，利用 Slots（`props.children`）或 Render Props 讓按鈕與登入指示部分可被外部自訂，使該輸入容器可被高程度複用至「編輯留言」或「回覆留言」等不同的功能板塊中。
+ */
