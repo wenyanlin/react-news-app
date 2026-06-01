@@ -6,10 +6,12 @@ import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 
 export function Layout() {
   return (
-    <>
+    <div className="min-h-screen bg-[#f8fafc] text-slate-800 flex flex-col">
       <Header />
-      <Outlet />
-    </>
+      <main className="grow max-w-4xl w-full mx-auto px-4 py-6 md:py-8">
+        <Outlet />
+      </main>
+    </div>
   );
 }
 

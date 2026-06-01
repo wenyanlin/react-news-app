@@ -60,8 +60,15 @@ type HomePageContentProps = {
  */
 function HomePageContent({ categoryId, categories }: HomePageContentProps) {
   return (
-    <div>
-      <h1>Home Page</h1>
+    <div className="space-y-6">
+      <div className="border-b border-slate-200 pb-4">
+        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
+          今日焦點新聞
+        </h1>
+        <p className="mt-1 text-sm text-slate-500">
+          為您提供最新、最即時的社會與科技動態資訊。
+        </p>
+      </div>
       <CategoryList categoryId={categoryId} categories={categories} />
       <ArticleList categoryId={categoryId} />
     </div>

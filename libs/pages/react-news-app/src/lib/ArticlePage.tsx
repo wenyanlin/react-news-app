@@ -3,7 +3,7 @@ import { CommentSection } from '@org/comments';
 import { ArticleDetail } from '@org/news';
 import { Article } from '@org/types';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 /**
  * 文章詳情頁
@@ -56,9 +56,17 @@ type ArticlePageContent = {
  */
 function ArticlePageContent({ articleDetail }: ArticlePageContent) {
   return (
-    <div>
-      <h1>Article Page</h1>
+    <div className="space-y-8">
+      <div className="mb-4">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors"
+        >
+          ← 返回首頁
+        </Link>
+      </div>
       <ArticleDetail articleDetail={articleDetail} />
+      <hr className="border-slate-200" />
       <CommentSection articleId={articleDetail.id} />
     </div>
   );
