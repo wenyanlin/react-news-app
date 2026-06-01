@@ -34,13 +34,10 @@
       "path": "../../libs/pages/react-news-app/tsconfig.lib.json"
     },
     {
-      "path": "../../libs/ui/tsconfig.lib.json"
-    },
-    {
-      "path": "../../libs/utils/tsconfig.lib.json"
-    },
-    {
       "path": "../../libs/layouts/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/auth/tsconfig.lib.json"
     }
   ]
 }
