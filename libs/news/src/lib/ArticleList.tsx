@@ -3,10 +3,10 @@
  * @description 新聞文章列表組件，依據當前選擇 the categoryId 從 API 載入文章數據，並渲染成美觀的新聞卡片。
  */
 
-import { fetchArticlesByCategoryId } from '@org/api';
+import { fetchArticlesByCategoryId, useData } from '@org/api';
 import { Article } from '@org/types';
 import { formatDate } from '@org/utils';
-import { useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
 type ArticleListProps = {
@@ -20,34 +20,15 @@ type ArticleListProps = {
  *              成功加載後，渲染一系列的響應式連結卡片，點擊可透過 SPA 路由進入詳細閱讀頁面。
  */
 export function ArticleList({ categoryId }: ArticleListProps) {
-  const [articleList, setArticleList] = useState<Article[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    const loadArticles = async () => {
-      try {
-        setIsLoading(true);
-        const data = await fetchArticlesByCategoryId(categoryId);
-        if (!cancelled) {
-          setArticleList(data);
-        }
-      } catch (error) {
-        if (error instanceof Error) {
-          if (!cancelled) setError(error.message);
-        } else {
-          setError(String(error));
-        }
-      } finally {
-        if (!cancelled) setIsLoading(false);
-      }
-    };
-    loadArticles();
-    return () => {
-      cancelled = true;
-    };
-  }, [categoryId]);
+  const getArticlesByCategoryId = useCallback(
+    () => fetchArticlesByCategoryId(categoryId),
+    [categoryId],
+  );
+  const {
+    data: articleList,
+    isLoading,
+    error,
+  } = useData<Article[]>(getArticlesByCategoryId);
 
   if (isLoading) {
     return (
@@ -62,12 +43,12 @@ export function ArticleList({ categoryId }: ArticleListProps) {
   if (error) {
     return (
       <div className="p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 text-sm">
-        發生錯誤：{error}
+        發生錯誤：{error.message}
       </div>
     );
   }
 
-  if (articleList.length === 0) {
+  if (!articleList || articleList.length === 0) {
     return (
       <div className="p-12 text-center bg-white border border-slate-100 rounded-2xl">
         <p className="text-slate-400 font-medium">目前該分類沒有新聞唷！</p>
@@ -90,7 +71,7 @@ export function ArticleList({ categoryId }: ArticleListProps) {
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
           </div>
-          <div className="flex flex-col justify-between py-1 flex-grow">
+          <div className="flex flex-col justify-between py-1 grow">
             <div className="space-y-1">
               <h3 className="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-1">
                 {article.title}
@@ -102,7 +83,10 @@ export function ArticleList({ categoryId }: ArticleListProps) {
             <div className="flex items-center gap-4 mt-3 text-xs text-slate-400 font-medium">
               <span>{formatDate(article.publishedAt)}</span>
               <span className="inline-flex items-center gap-1 bg-slate-50 px-2 py-0.5 rounded-full border border-slate-100 text-slate-500">
-                <span role="img" aria-label="comments">💬</span> {article.commentCount} 則評論
+                <span role="img" aria-label="comments">
+                  💬
+                </span>{' '}
+                {article.commentCount} 則評論
               </span>
             </div>
           </div>

@@ -3,11 +3,11 @@
  * @description 新聞文章詳情頁面，負責驗證 URL 參數 articleId，獲取文章詳細內容，並加載相關評論板塊。
  */
 
-import { fetchArticle } from '@org/api';
+import { fetchArticle, useData } from '@org/api';
 import { CommentSection } from '@org/comments';
 import { ArticleDetail } from '@org/news';
 import { Article } from '@org/types';
-import { useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 /**
@@ -17,38 +17,22 @@ import { Link, useParams } from 'react-router-dom';
  */
 export function ArticlePage() {
   const { articleId } = useParams();
-  const [articleDetail, setArticleDetail] = useState<Article | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!articleId) return;
-    let cancelled = false;
-    const loadArticles = async () => {
-      try {
-        setIsLoading(true);
-        const data = await fetchArticle(articleId);
-        if (!cancelled) {
-          setArticleDetail(data);
-        }
-      } catch (error) {
-        if (error instanceof Error) {
-          if (!cancelled) setError(error.message);
-        } else {
-          setError(String(error));
-        }
-      } finally {
-        if (!cancelled) setIsLoading(false);
-      }
-    };
-    loadArticles();
-    return () => {
-      cancelled = true;
-    };
+  const getArticleDetail = useCallback(() => {
+    if (!articleId) {
+      return Promise.reject(new Error('尚未取得文章 ID'));
+    }
+    return fetchArticle(articleId);
   }, [articleId]);
 
+  const {
+    data: articleDetail,
+    isLoading,
+    error,
+  } = useData<Article>(getArticleDetail);
+
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  if (error) return <div>{error.message}</div>;
 
   return articleDetail && <ArticlePageContent articleDetail={articleDetail} />;
 }
