@@ -3,7 +3,7 @@
  * @description 新聞文章列表組件，依據當前選擇 the categoryId 從 API 載入文章數據，並渲染成美觀的新聞卡片。
  */
 
-import { fetchArticlesByCategoryId, useData } from '@org/api';
+import { fetchArticlesByCategoryId, useDataV2 } from '@org/api';
 import { Article } from '@org/types';
 import { formatDate } from '@org/utils';
 import { useCallback } from 'react';
@@ -20,15 +20,14 @@ type ArticleListProps = {
  *              成功加載後，渲染一系列的響應式連結卡片，點擊可透過 SPA 路由進入詳細閱讀頁面。
  */
 export function ArticleList({ categoryId }: ArticleListProps) {
-  const getArticlesByCategoryId = useCallback(
-    () => fetchArticlesByCategoryId(categoryId),
-    [categoryId],
-  );
   const {
     data: articleList,
     isLoading,
     error,
-  } = useData<Article[]>(getArticlesByCategoryId);
+  } = useDataV2<Article[]>(
+    () => fetchArticlesByCategoryId(categoryId),
+    [categoryId],
+  );
 
   if (isLoading) {
     return (
