@@ -3,10 +3,9 @@
  * @description 新聞文章列表組件，依據當前選擇 the categoryId 從 API 載入文章數據，並渲染成美觀的新聞卡片。
  */
 
-import { fetchArticlesByCategoryId, useDataV2 } from '@org/api';
+import { fetchArticlesByCategoryId, useDataV3 } from '@org/api';
 import { Article } from '@org/types';
 import { formatDate } from '@org/utils';
-import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
 type ArticleListProps = {
@@ -24,9 +23,9 @@ export function ArticleList({ categoryId }: ArticleListProps) {
     data: articleList,
     isLoading,
     error,
-  } = useDataV2<Article[]>(
-    () => fetchArticlesByCategoryId(categoryId),
-    [categoryId],
+  } = useDataV3<Article[], string>(
+    fetchArticlesByCategoryId,
+    categoryId,
   );
 
   if (isLoading) {
