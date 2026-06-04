@@ -3,9 +3,20 @@
  * @description 自訂 Hook，負責管理特定文章的留言資料狀態，提供加載、新增、刪除、編輯及按讚/按噓的狀態變更邏輯。
  */
 
-import { fetchComments } from '@org/api';
+import { fetchComments, useData } from '@org/api';
 import { Comment } from '@org/types';
-import { useEffect, useState } from 'react';
+import { useCallback } from 'react';
+
+interface UseCommentsResult {
+  comments: Comment[] | null;
+  isLoading: boolean;
+  error: Error | null;
+  addComment: (comment: Comment) => void;
+  removeComment: (commentId: string) => void;
+  editComment: (commentId: string, newContent: string) => void;
+  likeComment: (commentId: string) => void;
+  dislikeComment: (commentId: string) => void;
+}
 
 /**
  * useComments 自訂 Hook
@@ -14,54 +25,35 @@ import { useEffect, useState } from 'react';
  * @param {string} articleId - 欲查詢並管理留言的文章 ID
  * @returns {object} 包含 comments 列表、isLoading 狀態、error 狀態以及多個留言操作方法的物件
  */
-export function useComments(articleId: string) {
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+export function useComments(articleId: string): UseCommentsResult {
+  const getComments = useCallback(() => fetchComments(articleId), [articleId]);
 
-  useEffect(() => {
-    if (!articleId) return;
-    let cancelled = false;
-    const loadComments = async () => {
-      try {
-        setIsLoading(true);
-        const data = await fetchComments(articleId);
-        if (!cancelled) {
-          setComments(data);
-        }
-      } catch (err) {
-        if (err instanceof Error) {
-          if (!cancelled) setError(err.message);
-        } else {
-          setError(String(err));
-        }
-      } finally {
-        if (!cancelled) setIsLoading(false);
-      }
-    };
-    loadComments();
-    return () => {
-      cancelled = true;
-    };
-  }, [articleId]);
+  const {
+    data: comments,
+    isLoading,
+    error,
+    setData: setComments,
+  } = useData<Comment[]>(getComments);
 
   const addComment = (comment: Comment) => {
-    setComments((prev) => [comment, ...prev]);
+    setComments((prev) => [comment, ...(prev ?? [])]);
   };
 
   const removeComment = (commentId: string) => {
-    setComments((prev) => prev.filter((c) => c.id !== commentId));
+    setComments((prev) => (prev ?? []).filter((c) => c.id !== commentId));
   };
 
   const editComment = (commentId: string, newContent: string) => {
     setComments((prev) =>
-      prev.map((c) => (c.id === commentId ? { ...c, content: newContent } : c)),
+      (prev ?? []).map((c) =>
+        c.id === commentId ? { ...c, content: newContent } : c,
+      ),
     );
   };
 
   const likeComment = (commentId: string) => {
     setComments((prev) =>
-      prev.map((c) =>
+      (prev ?? []).map((c) =>
         c.id === commentId ? { ...c, likeCount: c.likeCount + 1 } : c,
       ),
     );
@@ -69,7 +61,7 @@ export function useComments(articleId: string) {
 
   const dislikeComment = (commentId: string) => {
     setComments((prev) =>
-      prev.map((c) =>
+      (prev ?? []).map((c) =>
         c.id === commentId ? { ...c, dislikeCount: c.dislikeCount + 1 } : c,
       ),
     );

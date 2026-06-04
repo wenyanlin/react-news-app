@@ -8,7 +8,7 @@ import { CommentItem } from './CommentItem';
 
 type CommentListProps = {
   /** 留言列表陣列 */
-  comments?: Comment[];
+  comments?: Comment[] | null;
   /** 刪除留言的回呼函式 */
   onDelete: (id: string) => void;
   /** 編輯留言的回呼函式 */
@@ -29,10 +29,12 @@ export function CommentList({
   onDelete,
   onEdit,
 }: CommentListProps) {
-  if (comments.length === 0) {
+  if (!comments || comments.length === 0) {
     return (
       <div className="p-8 text-center bg-white border border-slate-100 rounded-xl">
-        <p className="text-slate-400 text-sm font-medium">目前尚無讀者留言，快來搶沙發吧！</p>
+        <p className="text-slate-400 text-sm font-medium">
+          目前尚無讀者留言，快來搶沙發吧！
+        </p>
       </div>
     );
   }

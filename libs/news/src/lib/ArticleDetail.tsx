@@ -31,15 +31,15 @@ export function ArticleDetail({ articleDetail }: ArticleDetailProps) {
           </time>
         </div>
       </header>
-      
-      <div className="w-full h-64 md:h-[350px] overflow-hidden rounded-2xl shadow-xs mb-8 bg-slate-100">
+
+      <div className="w-full h-64 md:h-87.5 overflow-hidden rounded-2xl shadow-xs mb-8 bg-slate-100">
         <img
           src={articleDetail.imageUrl}
           alt={articleDetail.title}
           className="w-full h-full object-cover"
         />
       </div>
-      
+
       <div className="text-slate-700 leading-loose text-lg whitespace-pre-line">
         {articleDetail.content}
       </div>
