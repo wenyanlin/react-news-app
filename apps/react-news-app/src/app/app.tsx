@@ -7,6 +7,7 @@ import { AuthProvider } from '@org/auth';
 import { Header } from '@org/layouts';
 import { ArticlePage, HomePage, LoginPage } from '@org/page-react-news-app';
 import '@org/ui/global.css';
+import { Suspense } from 'react';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 
 /**
@@ -19,7 +20,11 @@ export function Layout() {
     <div className="min-h-screen bg-[#f8fafc] text-slate-800 flex flex-col">
       <Header />
       <main className="grow max-w-4xl w-full mx-auto px-4 py-6 md:py-8">
-        <Outlet />
+        <Suspense fallback={
+          <div className='py-20 text-center text-slate-500 font-medium animate-pulse'>全域載入中，請稍後... </div>
+        }>
+          <Outlet />
+        </Suspense>
       </main>
     </div>
   );

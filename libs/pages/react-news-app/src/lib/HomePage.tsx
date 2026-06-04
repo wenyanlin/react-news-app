@@ -3,11 +3,13 @@
  * @description 應用程式首頁，負責載入新聞分類目錄、驗證當前網址的 categoryId 參數是否合法，並進行預設分類的跳轉重導向。
  */
 
-import { fetchCategories, useData } from '@org/api';
+import { fetchCategories } from '@org/api';
 import { ArticleList, CategoryList } from '@org/news';
 import { Category } from '@org/types';
-import { useCallback } from 'react';
+import { use } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
+
+const categoriesPromise = fetchCategories();
 
 /**
  * HomePage 元件
@@ -17,11 +19,15 @@ import { Navigate, useParams } from 'react-router-dom';
 export function HomePage() {
   const { categoryId } = useParams();
 
-  const fetch = useCallback(() => fetchCategories(), []);
-  const { data: categories, isLoading, error } = useData<Category[]>(fetch);
+  // 讀取 Promise。未完成時，會自動觸發在 app.tsx 設定的 Suspense
+  const categories = use(categoriesPromise);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (categories === null || error) return <div>{error?.message}</div>;
+  // 不需寫 isLoading，此時 categories 必已加載完成
+  // const fetch = useCallback(() => fetchCategories(), []);
+  // const { data: categories, isLoading, error } = useData<Category[]>(fetch);
+
+  // if (isLoading) return <div>Loading...</div>;
+  // if (categories === null || error) return <div>{error?.message}</div>;
   if (
     !categoryId ||
     !categories.find((category) => category.id === categoryId)
