@@ -23,10 +23,7 @@ export function ArticleList({ categoryId }: ArticleListProps) {
     data: articleList,
     isLoading,
     error,
-  } = useDataV3<Article[], string>(
-    fetchArticlesByCategoryId,
-    categoryId,
-  );
+  } = useDataV3<Article[], string>(fetchArticlesByCategoryId, categoryId);
 
   if (isLoading) {
     return (

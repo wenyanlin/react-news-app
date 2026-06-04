@@ -75,4 +75,3 @@ export async function fetchComments(articleId: string): Promise<Comment[]> {
   );
   return filteredComments;
 }
-
