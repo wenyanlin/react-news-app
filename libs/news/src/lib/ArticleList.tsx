@@ -3,9 +3,10 @@
  * @description 新聞文章列表組件，依據當前選擇 the categoryId 從 API 載入文章數據，並渲染成美觀的新聞卡片。
  */
 
-import { fetchArticlesByCategoryId, useDataV3 } from '@org/api';
+import { fetchArticlesByCategoryId } from '@org/api';
 import { Article } from '@org/types';
 import { formatDate } from '@org/utils';
+import { Suspense, use } from 'react';
 import { Link } from 'react-router-dom';
 
 type ArticleListProps = {
@@ -19,29 +20,47 @@ type ArticleListProps = {
  *              成功加載後，渲染一系列的響應式連結卡片，點擊可透過 SPA 路由進入詳細閱讀頁面。
  */
 export function ArticleList({ categoryId }: ArticleListProps) {
-  const {
-    data: articleList,
-    isLoading,
-    error,
-  } = useDataV3<Article[], string>(fetchArticlesByCategoryId, categoryId);
+  const articleListPromise = fetchArticlesByCategoryId(categoryId);
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center py-12">
-        <div className="animate-pulse flex space-x-2 items-center">
-          <span className="text-slate-400 font-medium">讀取新聞中...</span>
-        </div>
-      </div>
-    );
-  }
+  // const {
+  //   data: articleList,
+  //   isLoading,
+  //   error,
+  // } = useDataV3<Article[], string>(fetchArticlesByCategoryId, categoryId);
 
-  if (error) {
-    return (
-      <div className="p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 text-sm">
-        發生錯誤：{error.message}
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="flex justify-center items-center py-12">
+  //       <div className="animate-pulse flex space-x-2 items-center">
+  //         <span className="text-slate-400 font-medium">讀取新聞中...</span>
+  //       </div>
+  //     </div>
+  //   );
+  // }
+
+  // if (error) {
+  //   return (
+  //     <div className="p-4 bg-red-50 text-red-600 rounded-xl border border-red-100 text-sm">
+  //       發生錯誤：{error.message}
+  //     </div>
+  //   );
+  // }
+
+  return (
+    <Suspense
+      fallback={<div className="text-slate-400 font-medium">讀取新聞中...</div>}
+    >
+      <ArticleListContent articleListPromise={articleListPromise} />
+    </Suspense>
+  );
+}
+
+type ArticleListContentProps = {
+  articleListPromise: Promise<Article[]>;
+};
+
+function ArticleListContent({ articleListPromise }: ArticleListContentProps) {
+  const articleList: Article[] = use(articleListPromise);
 
   if (!articleList || articleList.length === 0) {
     return (
@@ -50,7 +69,6 @@ export function ArticleList({ categoryId }: ArticleListProps) {
       </div>
     );
   }
-
   return (
     <div className="space-y-4">
       {articleList.map((article) => (
