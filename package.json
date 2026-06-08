@@ -2,7 +2,12 @@
   "name": "@org/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "prepare": "husky",
+    "precommit": "lint-staged",
+    "lint:prettier": "prettier --write \"**/*.{js, ts, mjs, cjs, json, tsx, css, less, scss, html, md}\"",
+    "lint:eslint": "eslint"
+  },
   "private": true,
   "dependencies": {
     "@react-router/node": "^7.14.2",
@@ -60,9 +65,11 @@
     "eslint-plugin-playwright": "^1.6.2",
     "eslint-plugin-react": "7.35.0",
     "eslint-plugin-react-hooks": "5.0.0",
+    "husky": "^9.1.7",
     "jiti": "2.4.2",
     "jsdom": "~22.1.0",
     "jsonc-eslint-parser": "^2.1.0",
+    "lint-staged": "^17.0.7",
     "nx": "22.7.5",
     "prettier": "^3.8.1",
     "supertest": "^7.1.4",
