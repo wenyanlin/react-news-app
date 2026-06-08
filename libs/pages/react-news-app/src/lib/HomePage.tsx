@@ -61,7 +61,7 @@ function HomePageContent({ categoryId, categories }: HomePageContentProps) {
           為您提供最新、最即時的社會與科技動態資訊。
         </p>
       </div>
-      <CategoryList categoryId={categoryId} categories={categories} />
+      <CategoryList categories={categories} />
       <ArticleList categoryId={categoryId} />
     </div>
   );

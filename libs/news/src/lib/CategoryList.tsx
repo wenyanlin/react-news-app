@@ -7,8 +7,6 @@ import { Category } from '@org/types';
 import { NavLink } from 'react-router-dom';
 
 type CategoryListProps = {
-  /** 當前所選中的分類 ID */
-  categoryId: string;
   /** 所有可用的新聞分類陣列 */
   categories: Category[];
 };
@@ -18,7 +16,7 @@ type CategoryListProps = {
  * @description 渲染水平排列的膠囊型按鈕群組。點擊任一標籤會更新 URL 的 categoryId 路由，
  *              並透過 React Router 的 NavLink 動態切換啟用狀態（Active States）的高亮樣式。
  */
-export function CategoryList({ categoryId, categories }: CategoryListProps) {
+export function CategoryList({ categories }: CategoryListProps) {
   return (
     <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
       {categories.map((category) => (
